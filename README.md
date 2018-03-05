@@ -65,3 +65,8 @@ delete_old_trades.php
 trades.php
 get_data.php
 ```
+
+See the line (in those files):
+```
+$db = new PDO('mysql:dbname=bitmex', 'root', '[password]', array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+```
