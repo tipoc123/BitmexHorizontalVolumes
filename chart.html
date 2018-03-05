@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/knockout-3.4.2.js"></script>
+    <script src="chart.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="chart.css" />
+</head>
+<body>
+    <script>
+        function initDateTimePicker() {
+            ko.bindingHandlers.dateTimePicker = {
+                init: function (element, valueAccessor, allBindingsAccessor) {
+                    //initialize datepicker with some optional options
+                    var options = allBindingsAccessor().dateTimePickerOptions || {};
+                    $(element).datetimepicker(options);
+
+                    //when a user changes the date, update the view model
+                    ko.utils.registerEventHandler(element, "dp.change", function (event) {
+                        var value = valueAccessor();
+                        if (ko.isObservable(value)) {
+                            if (event.date != null && !(event.date instanceof Date)) {
+                                value(event.date.toDate());
+                            } else {
+                                value(event.date);
+                            }
+                        }
+                    });
+
+                    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                        var picker = $(element).data("DateTimePicker");
+                        if (picker) {
+                            picker.destroy();
+                        }
+                    });
+                },
+                update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+
+                    var picker = $(element).data("DateTimePicker");
+                    //when the view model is updated, update the widget
+                    if (picker) {
+                        var koDate = ko.utils.unwrapObservable(valueAccessor());
+
+                        //in case return from server datetime i am get in this form for example /Date(93989393)/ then fomat this
+                        koDate = (typeof (koDate) !== 'object') ? new Date(parseFloat(koDate.replace(/[^0-9]/g, ''))) : koDate;
+
+                        picker.date(koDate);
+                    }
+                }
+            };
+        }
+
+        window.onload = function() {
+            initDateTimePicker();
+            getData(false);
+
+            var select = document.getElementById("interval_select");
+            select.onchange = function() {
+                var option = select.options[select.selectedIndex];
+                interval = parseInt(option.value, 10);
+                /*if (interval == 60) {
+                    horizontalVolumeStep = 0.5;
+                } else if (interval == 120) {
+                    horizontalVolumeStep = 1;
+                }*/
+                initData();
+                repaint();
+            }
+        }
+    </script>
+
+    <div class="container">
+        <div class='col-sm-2' id="interval_select_wrapper">
+            <div class="form-group">
+                <select class="form-control" id="interval_select">
+                    <option value="60">1 min</option>
+                    <option value="120">2 min</option>
+                    <option value="300">5 min</option>
+                </select>
+            </div>
+        </div>
+        <div class='col-sm-3'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class='col-sm-3'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker2'>
+                    <input type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-check form-check-inline" id="checkbox_wrapper">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" id="nowCheckbox" value="1"> Now
+            </label>
+            <label class="form-check-label" id="colored_label">
+                <input class="form-check-input" type="checkbox" id="coloredCheckbox" value="1"> Colored
+            </label>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                    date: new Date(since * 1000),
+                    format: 'DD.MM.YYYY H:mm'
+                });
+
+                $('#datetimepicker2').datetimepicker({
+                    date: new Date(till * 1000),
+                    format: 'DD.MM.YYYY H:mm'
+                });
+                $("#datetimepicker1").on("dp.change", function (e) {
+                    $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker2").on("dp.change", function (e) {
+                    $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+                });
+                $("#datetimepicker1").on("dp.hide", function (e) {
+                    var d = $('#datetimepicker1').data("DateTimePicker").date();
+                    since = d / 1000;
+                    if ($("#nowCheckbox").is(':checked'))
+                        getData(true);
+                    else
+                        getData(false);
+                });
+                $("#datetimepicker2").on("dp.hide", function (e) {
+                    var d = $('#datetimepicker2').data("DateTimePicker").date();
+                    till = d / 1000;
+                    getData(false);
+                });
+                $("#nowCheckbox").change(function () {
+                    if (this.checked) {
+                        $('#datetimepicker2').data("DateTimePicker").disable();
+
+                        getData(true);
+                    } else {
+                        $('#datetimepicker2').data("DateTimePicker").enable();
+
+                        till = Math.ceil(Date.now() / (60 * 1000)) * 60;
+                        $('#datetimepicker2').data("DateTimePicker").date(new Date(till * 1000));
+                        getData(false);
+                    }
+                });
+                $("#coloredCheckbox").prop('checked', colored);
+                $("#coloredCheckbox").change(function() {
+                    colored = this.checked;
+                    repaint();
+                });
+            });
+        </script>
+    </div>
+    <canvas id="chart">
+
+    </canvas>
+    <table id="trades">
+        <tbody></tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[Unit]
+Description = PHP trades
+
+[Service]
+User = root
+Type = simple
+PIDFile = /root/bitmex/trades.pid
+WorkingDirectory=/root/bitmex
+ExecStart = /usr/bin/php /root/bitmex/trades.php
+Restart = on-abort
+
+[Install]
+WantedBy = multi-user.target

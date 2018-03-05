@@ -1,0 +1,10 @@
+create table trades (
+    id int not null auto_increment,
+    `timestamp` int not null,
+    microseconds int not null,
+    side varchar(20) not null,
+    size int not null,
+    price double not null,
+    trd_match_id varchar(100) not null unique,
+    primary key(id), index(`timestamp`, microseconds)
+);

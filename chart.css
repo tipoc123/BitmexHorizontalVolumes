@@ -1,0 +1,55 @@
+#control_panel {
+    height: 30px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.container {
+    margin-left: 0;
+}
+
+#chart {
+    margin-left: 10px;
+}
+
+#interval_select_wrapper {
+    line-height: 54px;
+}
+
+#checkbox_wrapper {
+    line-height: 54px;
+}
+
+label {
+    margin-bottom: 0;
+}
+
+#colored_label {
+    margin-left: 10px;
+}
+
+#trades {
+    display: inline-block;
+    vertical-align: top;
+    width: 300px;
+    height: 800px;
+}
+
+#trades td {
+    width: 100px;
+    border: 1px solid gray;
+    padding-right: 2px;
+    text-align: right;
+    font-size: 12px;
+}
+
+#trades tr:nth-child(even) {
+    background: #eaeaea;
+}
+
+#trades tr:nth-child(odd) {
+    background: #fff;
+}
