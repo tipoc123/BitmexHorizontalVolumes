@@ -2,7 +2,11 @@
 Horizontal volumes for bitmex exchange
 
 Files:
+```
 .idea - PhpStorm project
+trades.php - script for adding data to database
+trades.service - ubuntu systemd service (for trades.php)
+```
 
 Files for Web (example):
 ```
@@ -18,4 +22,37 @@ drwxr-xr-x 2 root root  4096 Nov 23 13:26 css
 drwxr-xr-x 2 root root  4096 Nov 23 13:26 fonts
 -rw-r--r-- 1 root root   715 Nov 24 16:55 get_data.php
 drwxr-xr-x 2 root root  4096 Nov 23 13:26 js
+root@horizontalvol:/var/www/html/bitmex# 
+```
+
+cron task for delete_old_trades.php:
+```
+0 * * * * /usr/bin/php /root/bitmex/delete_old_trades.php
+```
+
+Database:
+```
+mysql> show create database bitmex;
++----------+-----------------------------------------------------------------+
+| Database | Create Database                                                 |
++----------+-----------------------------------------------------------------+
+| bitmex   | CREATE DATABASE `bitmex` /*!40100 DEFAULT CHARACTER SET utf8 */ |
++----------+-----------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql>
+```
+
+Tables in the database:
+```
+mysql> show tables;
++------------------+
+| Tables_in_bitmex |
++------------------+
+| trades           |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
 ```
