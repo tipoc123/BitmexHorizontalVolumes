@@ -1,6 +1,8 @@
 # bitmex
 Horizontal volumes for bitmex exchange
 
+![Screenshot](web.png)
+
 Files:
 ```
 .idea - PhpStorm project
@@ -56,5 +58,3 @@ mysql> show tables;
 mysql> 
 
 ```
-
-![Screenshot](web.png)
