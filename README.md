@@ -45,7 +45,7 @@ mysql> show create database bitmex;
 mysql>
 ```
 
-Tables in the database:
+Tables in the database (see create_database.txt file):
 ```
 mysql> show tables;
 +------------------+
@@ -57,4 +57,11 @@ mysql> show tables;
 
 mysql> 
 
+```
+
+Files for replacing [password] with your database password:
+```
+delete_old_trades.php
+trades.php
+get_data.php
 ```
