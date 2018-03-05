@@ -4,7 +4,7 @@ Horizontal volumes for bitmex exchange
 Files:
 ```
 .idea - PhpStorm project
-trades.php - script for adding data to database
+trades.php - script for adding new trades to database (must be permanently running, see trades.service)
 trades.service - ubuntu systemd service (for trades.php)
 ```
 
@@ -56,3 +56,5 @@ mysql> show tables;
 mysql> 
 
 ```
+
+![Screenshot](web.png)
