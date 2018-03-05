@@ -1,5 +1,5 @@
 # bitmex
-Horizontal volumes for bitmex exchange
+Horizontal volumes for bitmex exchange. Use the HTML5 Canvas element to draw graphics.
 
 ![Screenshot](web.png)
 
